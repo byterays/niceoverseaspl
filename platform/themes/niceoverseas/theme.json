@@ -1,0 +1,10 @@
+{
+    "id": "botble/{-theme}",
+    "name": "NiceOversesas Website",
+    "namespace": "Theme\\NiceOversesas\\",
+    "author": "Byterays Technology",
+    "url": "https://www.byterays.com",
+    "version": "1.0.0",
+    "description": "Design for NiceOversesas Website",
+    "required_plugins": []
+}

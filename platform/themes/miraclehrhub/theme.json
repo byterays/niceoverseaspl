@@ -1,0 +1,10 @@
+{
+    "id": "botble/{-theme}",
+    "name": "Byterays Manpower Website",
+    "namespace": "Theme\\Miraclehrhub\\",
+    "author": "Byterays Technology",
+    "url": "https://www.byterays.com",
+    "version": "1.0.0",
+    "description": "Design for Manpower Website",
+    "required_plugins": []
+}
