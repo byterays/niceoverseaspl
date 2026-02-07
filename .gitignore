@@ -1,54 +1,109 @@
-/node_modules
-/public/hot
-/public/storage
-/storage/*.key
-/vendor
-.DS_Store
-Thumbs.db
-/bower_components
+############################
+# Environment & secrets
+############################
 .env
-.env.backup
-/.idea
-/.vscode
-/.vagrant
-Homestead.json
-Homestead.yaml
-npm-debug.log
-sftp-config.json
-.phpstorm.meta.php
-_ide_helper_models.php
-/storage/app/backup
-/storage/cache_keys.json
+.env.*
+!.env.example
 
-__MACOSX
-/.phpintel
-/.php_cs.cache
-
-public/vendor/core
-
-_ide_helper.php
+############################
+# Dependencies
+############################
+/vendor/
+/node_modules/
+/bower_components/
 yarn.lock
 bun.lockb
-/.sass-cache
 
-public/mix-manifest.json
+############################
+# Laravel runtime & cache
+############################
+/storage/*.key
+/storage/app/*
+!/storage/app/public
+/storage/framework/*
+!/storage/framework/cache
+!/storage/framework/sessions
+!/storage/framework/views
+/storage/logs/*
+/bootstrap/cache/*
+/storage/cache_keys.json
+/storage/framework/laravel-excel/
+/storage/.license
+/storage/fonts
+/storage/installing
+/storage/installed
+/storage/app/backup
 
+############################
+# Public generated files
+############################
+/public/hot
+/public/storage
+/public/mix-manifest.json
+/public/build
+/public/vendor/core
+
+############################
+# Logs
+############################
+*.log
+/log
+
+############################
+# IDE / Editor
+############################
+.idea/
+.vscode/
+.phpstorm.meta.php
+.phpintel/
+_ide_helper.php
+_ide_helper_models.php
+
+############################
+# OS junk
+############################
+.DS_Store
+__MACOSX
+Thumbs.db
+desktop.ini
+
+############################
+# Tooling & temp
+############################
+npm-debug.log*
+.phpunit.result.cache
+.php_cs.cache
+.sass-cache/
+.sftp-config.json
+/.scribe
+
+############################
+# Laravel / CI
+############################
+.env.testing
+/.phpunit.cache
+coverage/
+
+############################
+# Docs (generated)
+############################
 public/docs
 resources/docs
 
-.phpunit.result.cache
-/storage/.license
-/storage/fonts
-/storage/framework/*.txt
-/storage/installing
-/storage/installed
-
+############################
+# Language overrides
+############################
 /lang/*
 !/lang/en
 
-/log
+############################
+# Vagrant / Homestead
+############################
+.vagrant/
+Homestead.json
+Homestead.yaml
 
-storage/framework/laravel-excel/
-/.scribe
-/.env.testing
-/__theme_niceoverseas__/
+############################
+# Botble / custom theme
+############################
+__theme_niceoverseas__/
