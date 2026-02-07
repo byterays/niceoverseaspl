@@ -1,0 +1,18 @@
+.feature-one__item .hiredots-btn,
+.about-three__call__icon,
+.feature-one__item__icon
+{    
+    background-color: #0b2f81;
+}
+
+.main-header--three .main-menu .main-menu__list>li>a {
+    color: #0b2f81;
+}
+
+.main-header--three.sticky-header--cloned {
+    background-color: #fff;
+}
+
+.main-header--three .main-header__link .main-header__call a {
+    color: #e76a0e;
+}
