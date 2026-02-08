@@ -2,26 +2,24 @@
 
 @php
     $page = Theme::get('page');
-
-    $enableSidebar = $page
-        ? $page->getMetaData('enable_sidebar', true) !== 'no'
-        : false;
-
-    $sidebarId = $page
-        ? ($page->getMetaData('sidebar_id', true) ?: 'page_sidebar')
-        : 'page_sidebar';
-
-    $sidebarContent = $enableSidebar ? dynamic_sidebar($sidebarId) : null;
+    $widgets = $page
+        ? json_decode($page->getMetaData('sidebar_widgets', true) ?: '[]', true)
+        : [];
 @endphp
 
 <div class="page-single">
     <div class="container">
         <div class="row">
 
-            @if ($enableSidebar && !empty(trim($sidebarContent)))
+            @if (!empty($widgets))
                 <div class="col-lg-4">
                     <div class="page-single-sidebar">
-                        {!! $sidebarContent !!}
+                        @foreach ($widgets as $widget)
+                            @include(
+                                Theme::getThemeNamespace().'::partials.sidebar-widgets.'.$widget['type'],
+                                ['widget' => $widget]
+                            )
+                        @endforeach
                     </div>
                 </div>
 

@@ -1,28 +1,78 @@
-<div class="form-group">
-    <label for="enable_sidebar">{{ __('Enable Sidebar') }}</label>
-    <select name="enable_sidebar" id="enable_sidebar" class="form-control">
-        <option value="yes" {{ $enableSidebar === 'yes' ? 'selected' : '' }}>
-            {{ __('Yes') }}
-        </option>
-        <option value="no" {{ $enableSidebar === 'no' ? 'selected' : '' }}>
-            {{ __('No') }}
-        </option>
-    </select>
+@php
+    $widgetTypes = theme_sidebar_widget_types();
+@endphp
+
+<div id="sidebar-widgets-wrapper">
+
+    @foreach ($widgets as $index => $widget)
+        <div class="sidebar-widget-box mb-3 p-3 border">
+            <div class="form-group">
+                <label>{{ __('Widget Type') }}</label>
+                <select name="sidebar_widgets[{{ $index }}][type]" class="form-control">
+                    @foreach ($widgetTypes as $key => $label)
+                        <option value="{{ $key }}" @selected($widget['type'] === $key)>
+                            {{ $label }}
+                        </option>
+                    @endforeach
+                </select>
+            </div>
+
+            <div class="form-group">
+                <label>{{ __('Content') }}</label>
+                <textarea
+                    name="sidebar_widgets[{{ $index }}][content]"
+                    class="form-control"
+                    rows="4"
+                >{{ $widget['content'] ?? '' }}</textarea>
+            </div>
+
+            <button type="button" class="btn btn-danger btn-sm remove-widget">
+                {{ __('Remove') }}
+            </button>
+        </div>
+    @endforeach
+
 </div>
 
-<div class="form-group">
-    <label for="sidebar_id">{{ __('Sidebar ID') }}</label>
-    <select name="sidebar_id" id="sidebar_id" class="form-control">
-        <option value="page_sidebar" {{ $sidebarId === 'page_sidebar' ? 'selected' : '' }}>
-            Page Sidebar
-        </option>
-        <option value="service_sidebar" {{ $sidebarId === 'service_sidebar' ? 'selected' : '' }}>
-            Service Sidebar
-        </option>
-    </select>
+<button type="button" class="btn btn-primary btn-sm" id="add-sidebar-widget">
+    + {{ __('Add Widget') }}
+</button>
 
-    <small class="text-muted">
-        Sidebar must be registered in theme and populated via
-        <strong>Appearance → Widgets</strong>.
-    </small>
-</div>
+<script>
+document.getElementById('add-sidebar-widget').addEventListener('click', function () {
+    const wrapper = document.getElementById('sidebar-widgets-wrapper');
+    const index = wrapper.children.length;
+
+    wrapper.insertAdjacentHTML('beforeend', `
+        <div class="sidebar-widget-box mb-3 p-3 border">
+            <div class="form-group">
+                <label>Widget Type</label>
+                <select name="sidebar_widgets[${index}][type]" class="form-control">
+                    @foreach ($widgetTypes as $key => $label)
+                        <option value="{{ $key }}">{{ $label }}</option>
+                    @endforeach
+                </select>
+            </div>
+
+            <div class="form-group">
+                <label>Content</label>
+                <textarea
+                    name="sidebar_widgets[${index}][content]"
+                    class="form-control"
+                    rows="4"
+                ></textarea>
+            </div>
+
+            <button type="button" class="btn btn-danger btn-sm remove-widget">
+                Remove
+            </button>
+        </div>
+    `);
+});
+
+document.addEventListener('click', function (e) {
+    if (e.target.classList.contains('remove-widget')) {
+        e.target.closest('.sidebar-widget-box').remove();
+    }
+});
+</script>

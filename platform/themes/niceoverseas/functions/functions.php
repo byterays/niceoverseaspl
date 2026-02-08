@@ -25,26 +25,27 @@ register_page_template([
     'page-sidebar' =>'Page with sidebar'
 ]);
 
+
 add_action(BASE_ACTION_META_BOXES, function ($context, $object) {
     if ($context !== 'advanced' || !($object instanceof Page)) {
         return;
     }
 
     MetaBox::addMetaBox(
-        'page_sidebar_settings',
-        __('Sidebar Settings'),
+        'page_sidebar_widgets',
+        __('Sidebar Widgets'),
         function () use ($object) {
 
-            $enableSidebar = MetaBox::getMetaData($object, 'enable_sidebar', true) ?: 'yes';
-            $sidebarId = MetaBox::getMetaData($object, 'sidebar_id', true) ?: 'page_sidebar';
+            $widgets = MetaBox::getMetaData($object, 'sidebar_widgets', true);
+            $widgets = $widgets ? json_decode($widgets, true) : [];
 
             return view(
-                Theme::getThemeNamespace() . '::partials.meta-boxes.page-sidebar',
-                compact('enableSidebar', 'sidebarId')
+                Theme::getThemeNamespace() . '::partials.meta-boxes.sidebar-widgets',
+                compact('widgets')
             )->render();
         },
         Page::class,
-        'advanced',
+        'side',
         'default'
     );
 }, 120, 2);
@@ -54,15 +55,26 @@ add_action('save_post', function ($postId, $request, $object) {
         return;
     }
 
-    if ($request->has('enable_sidebar')) {
-        MetaBox::saveMetaBoxData($object, 'enable_sidebar', $request->input('enable_sidebar'));
-    }
-
-    if ($request->has('sidebar_id')) {
-        MetaBox::saveMetaBoxData($object, 'sidebar_id', $request->input('sidebar_id'));
+    if ($request->has('sidebar_widgets')) {
+        MetaBox::saveMetaBoxData(
+            $object,
+            'sidebar_widgets',
+            json_encode(array_values($request->input('sidebar_widgets')))
+        );
     }
 }, 120, 3);
 
+
+
+function theme_sidebar_widget_types()
+{
+    return [
+        'text' => __('Text'),
+        'html' => __('Custom HTML'),
+        'image' => __('Image'),
+        'cta' => __('CTA Box'),
+    ];
+}
 
 
 // register_sidebar([
