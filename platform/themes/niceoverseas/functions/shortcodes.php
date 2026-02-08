@@ -92,6 +92,32 @@ app()->booted(function () {
     });
 
 
+
+
+    //our services
+
+    Shortcode::register(
+        'our-services',
+        __('Our Services'),
+        __('Services grid with icons and links'),
+        function (ShortcodeCompiler $shortcode) {
+
+            $services = Shortcode::fields()->getTabsData(['icon', 'title', 'description', 'link'], $shortcode, 'services');
+
+            // Remove empty rows
+            $services = array_values(array_filter($services, function ($item) {
+                return trim($item['title'] ?? '') !== '';
+            }));
+
+            return Theme::partial('shortcodes.our-services.styles.style-1', compact('shortcode', 'services'));
+        }
+    );
+
+    Shortcode::setAdminConfig('our-services', function (array $attributes) {
+        return Theme::partial('shortcodes.our-services.admin-config', compact('attributes'));
+    });
+
+
     //intro block
 
 
@@ -150,8 +176,6 @@ app()->booted(function () {
             return Theme::partial('shortcodes.testimonials-admin-config', compact('attributes'));
         });
     }
-
-
 
     Shortcode::register('profile-showcase', __('Profile Showcase'), __('Profile Showcase'), function (ShortcodeCompiler $shortcode) {
         $tabs = Shortcode::fields()->getTabsData(['company_logo', 'profile_thumb', 'website_text', 'website_link', 'profile_text', 'profile_link'], $shortcode);
