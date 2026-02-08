@@ -2,9 +2,7 @@
     Theme::set('pageTitle', $page->name);
     Theme::set('pageDescription', $page->description);
     Theme::set('pageCoverImage', $page->getMetaData('background_breadcrumb', true));
-    Theme::set('pageImage', $page->image);
-  
-  
+    Theme::set('pageImage', $page->image);  
 @endphp
 
 

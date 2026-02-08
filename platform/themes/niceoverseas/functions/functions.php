@@ -18,57 +18,93 @@ use Botble\Page\Models\Page;
 use Botble\Theme\Facades\Theme;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Http\Request;
+use Botble\Widget\Facades\Widget;
 
 register_page_template([
     'default' => 'Default',
-    // 'fullwidth-page' => 'Full Width Page',
-    // 'info-page'=> 'Info Page',
-    // 'page-detail' => __('Page detail full width'),
-    // 'page-detail-boxed' => __('Page detail boxed'),
+    'page-sidebar' =>'Page with sidebar'
 ]);
 
+add_action(BASE_ACTION_META_BOXES, function ($context, $object) {
+    if ($context !== 'advanced' || !($object instanceof Page)) {
+        return;
+    }
+
+    MetaBox::addMetaBox(
+        'page_sidebar_settings',
+        __('Sidebar Settings'),
+        function () use ($object) {
+
+            $enableSidebar = MetaBox::getMetaData($object, 'enable_sidebar', true) ?: 'yes';
+            $sidebarId = MetaBox::getMetaData($object, 'sidebar_id', true) ?: 'page_sidebar';
+
+            return view(
+                Theme::getThemeNamespace() . '::partials.meta-boxes.page-sidebar',
+                compact('enableSidebar', 'sidebarId')
+            )->render();
+        },
+        Page::class,
+        'advanced',
+        'default'
+    );
+}, 120, 2);
+
+add_action('save_post', function ($postId, $request, $object) {
+    if (!($object instanceof Page)) {
+        return;
+    }
+
+    if ($request->has('enable_sidebar')) {
+        MetaBox::saveMetaBoxData($object, 'enable_sidebar', $request->input('enable_sidebar'));
+    }
+
+    if ($request->has('sidebar_id')) {
+        MetaBox::saveMetaBoxData($object, 'sidebar_id', $request->input('sidebar_id'));
+    }
+}, 120, 3);
 
 
-register_sidebar([
-    'id' => 'footer_sidebar',
-    'name' => __('Footer sidebar'),
-    'description' => __('Widgets in footer of page'),
-]);
 
-register_sidebar([
-    'id' => 'pre_footer_sidebar',
-    'name' => __('Pre footer sidebar'),
-    'description' => __('Widgets at the bottom of the page.'),
-]);
+// register_sidebar([
+//     'id' => 'footer_sidebar',
+//     'name' => __('Footer sidebar'),
+//     'description' => __('Widgets in footer of page'),
+// ]);
 
-register_sidebar([
-    'id' => 'blog_sidebar',
-    'name' => __('Blog sidebar'),
-    'description' => __('Widgets at the right of the page.'),
-]);
+// register_sidebar([
+//     'id' => 'pre_footer_sidebar',
+//     'name' => __('Pre footer sidebar'),
+//     'description' => __('Widgets at the bottom of the page.'),
+// ]);
 
-register_sidebar([
-    'id' => 'candidate_sidebar',
-    'name' => __('Candidate sidebar'),
-    'description' => __('Widgets at the right of the page candidate detail.'),
-]);
+// register_sidebar([
+//     'id' => 'blog_sidebar',
+//     'name' => __('Blog sidebar'),
+//     'description' => __('Widgets at the right of the page.'),
+// ]);
 
-register_sidebar([
-    'id' => 'company_sidebar',
-    'name' => __('Company sidebar'),
-    'description' => __('Widgets at the right of the page company detail.'),
-]);
+// register_sidebar([
+//     'id' => 'candidate_sidebar',
+//     'name' => __('Candidate sidebar'),
+//     'description' => __('Widgets at the right of the page candidate detail.'),
+// ]);
 
-
-register_sidebar([
-    'id' => 'sidebar_menu',
-    'name' => __('Sidebar Menu'),
-    'description' => __('Menu Widgets at the right of the page .'),
-]);
+// register_sidebar([
+//     'id' => 'company_sidebar',
+//     'name' => __('Company sidebar'),
+//     'description' => __('Widgets at the right of the page company detail.'),
+// ]);
 
 
+// register_sidebar([
+//     'id' => 'sidebar_menu',
+//     'name' => __('Sidebar Menu'),
+//     'description' => __('Menu Widgets at the right of the page .'),
+// ]);
 
-Menu::addMenuLocation('footer-menu', 'Footer navigation');
+
+
+// Menu::addMenuLocation('footer-menu', 'Footer navigation');
 
 // Uncomment lines below to register second sidebar
 // register_sidebar([
@@ -82,172 +118,172 @@ Menu::addMenuLocation('footer-menu', 'Footer navigation');
 RvMedia::setUploadPathAndURLToPublic();
 
 
-app()->booted(function () {
-    RvMedia::addSize('featured', 403, 257);
+// app()->booted(function () {
+//     RvMedia::addSize('featured', 403, 257);
 
-    if (is_plugin_active('job-board')) {
-        AccountSettingForm::beforeRendering(function (AccountSettingForm $form) {
-            return $form->remove(['slug']);
-        });
+//     if (is_plugin_active('job-board')) {
+//         AccountSettingForm::beforeRendering(function (AccountSettingForm $form) {
+//             return $form->remove(['slug']);
+//         });
 
-        AccountSettingForm::beforeSaving(function (AccountSettingForm $form) {
-            $request = $form->getRequest();
-            $model = $form->getModel();
+//         AccountSettingForm::beforeSaving(function (AccountSettingForm $form) {
+//             $request = $form->getRequest();
+//             $model = $form->getModel();
 
-            if ($request->has('cover_image')) {
-                $coverImageUrl = $request->input('cover_image');
-                if ($request->hasFile('cover_image')) {
-                    $result = RvMedia::handleUpload($request->file('cover_image'), 0, $model->upload_folder);
+//             if ($request->has('cover_image')) {
+//                 $coverImageUrl = $request->input('cover_image');
+//                 if ($request->hasFile('cover_image')) {
+//                     $result = RvMedia::handleUpload($request->file('cover_image'), 0, $model->upload_folder);
 
-                    $coverImageUrl = $result['data']->url;
-                }
+//                     $coverImageUrl = $result['data']->url;
+//                 }
 
-                MetaBox::saveMetaBoxData($model, 'cover_image', $coverImageUrl);
-            }
-        });
+//                 MetaBox::saveMetaBoxData($model, 'cover_image', $coverImageUrl);
+//             }
+//         });
 
-        FormAbstract::extend(function (FormAbstract $form) {
-            if ($form instanceof AccountSettingForm || $form instanceof AccountForm) {
-                $form
-                    ->addAfter(
-                        'description',
-                        'linkedin',
-                        TextField::class,
-                        TextFieldOption::make()
-                            ->label(__('LinkedIn URL'))
-                            ->metadata()
-                            ->toArray()
-                    );
-            }
+//         FormAbstract::extend(function (FormAbstract $form) {
+//             if ($form instanceof AccountSettingForm || $form instanceof AccountForm) {
+//                 $form
+//                     ->addAfter(
+//                         'description',
+//                         'linkedin',
+//                         TextField::class,
+//                         TextFieldOption::make()
+//                             ->label(__('LinkedIn URL'))
+//                             ->metadata()
+//                             ->toArray()
+//                     );
+//             }
 
-            if ($form instanceof AccountForm) {
-                $form->add(
-                    'cover_image',
-                    MediaImageField::class,
-                    MediaImageFieldOption::make()
-                        ->label(__('Cover Image'))
-                        ->metadata()
-                        ->toArray()
-                );
-            }
+//             if ($form instanceof AccountForm) {
+//                 $form->add(
+//                     'cover_image',
+//                     MediaImageField::class,
+//                     MediaImageFieldOption::make()
+//                         ->label(__('Cover Image'))
+//                         ->metadata()
+//                         ->toArray()
+//                 );
+//             }
 
-            return $form;
-        });
-    }
+//             return $form;
+//         });
+//     }
 
-    add_filter(BASE_FILTER_BEFORE_RENDER_FORM, function (FormAbstract $form, ?Model $data) {
-        switch (get_class($data)) {
-            case Category::class:
-                $form
-                    ->addAfter('status', 'job_category_image', 'mediaImage', [
-                        'label' => __('Image'),
-                        'value' => MetaBox::getMetaData($data, 'job_category_image', true),
-                    ])
-                    ->addAfter('job_category_image', 'icon_image', 'mediaImage', [
-                        'label' => __('Icon Image'),
-                        'value' => MetaBox::getMetaData($data, 'icon_image', true),
-                    ]);
+//     add_filter(BASE_FILTER_BEFORE_RENDER_FORM, function (FormAbstract $form, ?Model $data) {
+//         switch (get_class($data)) {
+//             case Category::class:
+//                 $form
+//                     ->addAfter('status', 'job_category_image', 'mediaImage', [
+//                         'label' => __('Image'),
+//                         'value' => MetaBox::getMetaData($data, 'job_category_image', true),
+//                     ])
+//                     ->addAfter('job_category_image', 'icon_image', 'mediaImage', [
+//                         'label' => __('Icon Image'),
+//                         'value' => MetaBox::getMetaData($data, 'icon_image', true),
+//                     ]);
 
-                break;
-            case Post::class:
-                $form
-                    ->add('cover_image', 'mediaImage', [
-                        'label' => __('Cover Image'),
-                        'label_attr' => ['class' => 'control-label'],
-                        'value' => MetaBox::getMetaData($data, 'cover_image', true),
-                    ])
-                    ->addAfter('status', 'time_to_read', 'number', [
-                        'label' => __('Time to read'),
-                        'value' => MetaBox::getMetaData($data, 'time_to_read', true),
-                        'attr' => [
-                            'placeholder' => __('Time to read (minute)'),
-                            'class' => ['image-data'],
-                        ],
-                    ]);
+//                 break;
+//             case Post::class:
+//                 $form
+//                     ->add('cover_image', 'mediaImage', [
+//                         'label' => __('Cover Image'),
+//                         'label_attr' => ['class' => 'control-label'],
+//                         'value' => MetaBox::getMetaData($data, 'cover_image', true),
+//                     ])
+//                     ->addAfter('status', 'time_to_read', 'number', [
+//                         'label' => __('Time to read'),
+//                         'value' => MetaBox::getMetaData($data, 'time_to_read', true),
+//                         'attr' => [
+//                             'placeholder' => __('Time to read (minute)'),
+//                             'class' => ['image-data'],
+//                         ],
+//                     ]);
 
-                break;
-            case Page::class:
-                $form
-                    ->add('background_breadcrumb', 'mediaImage', [
-                        'label' => __('Background Breadcrumb'),
-                        'label_attr' => ['class' => 'control-label'],
-                        'value' => MetaBox::getMetaData($data, 'background_breadcrumb', true),
-                    ]);
+//                 break;
+//             case Page::class:
+//                 $form
+//                     ->add('background_breadcrumb', 'mediaImage', [
+//                         'label' => __('Background Breadcrumb'),
+//                         'label_attr' => ['class' => 'control-label'],
+//                         'value' => MetaBox::getMetaData($data, 'background_breadcrumb', true),
+//                     ]);
 
-                break;
-            case Job::class:
-                if (auth()->check()) {
-                    $form
-                        ->addBefore('categories[]', 'featured_image', 'mediaImage', [
-                            'label' => __('Featured Image'),
-                            'label_attr' => ['class' => 'control-label'],
-                            'value' => MetaBox::getMetaData($data, 'featured_image', true),
-                        ]);
-                } else {
-                    $form
-                        ->addAfter('status', 'featured_image', 'mediaImage', [
-                            'label' => __('Featured Image'),
-                            'label_attr' => ['class' => 'control-label'],
-                            'value' => MetaBox::getMetaData($data, 'featured_image', true),
-                        ]);
-                }
+//                 break;
+//             case Job::class:
+//                 if (auth()->check()) {
+//                     $form
+//                         ->addBefore('categories[]', 'featured_image', 'mediaImage', [
+//                             'label' => __('Featured Image'),
+//                             'label_attr' => ['class' => 'control-label'],
+//                             'value' => MetaBox::getMetaData($data, 'featured_image', true),
+//                         ]);
+//                 } else {
+//                     $form
+//                         ->addAfter('status', 'featured_image', 'mediaImage', [
+//                             'label' => __('Featured Image'),
+//                             'label_attr' => ['class' => 'control-label'],
+//                             'value' => MetaBox::getMetaData($data, 'featured_image', true),
+//                         ]);
+//                 }
 
-                break;
-        }
+//                 break;
+//         }
 
-        return $form;
-    }, 120, 3);
+//         return $form;
+//     }, 120, 3);
 
-    add_action([BASE_ACTION_AFTER_CREATE_CONTENT, BASE_ACTION_AFTER_UPDATE_CONTENT], function (string $screen, Request $request, $data): void {
-        if ($data instanceof Post && $request->has('time_to_read')) {
-            MetaBox::saveMetaBoxData($data, 'time_to_read', $request->input('time_to_read'));
-        }
+//     add_action([BASE_ACTION_AFTER_CREATE_CONTENT, BASE_ACTION_AFTER_UPDATE_CONTENT], function (string $screen, Request $request, $data): void {
+//         if ($data instanceof Post && $request->has('time_to_read')) {
+//             MetaBox::saveMetaBoxData($data, 'time_to_read', $request->input('time_to_read'));
+//         }
 
-        if ($data instanceof Category) {
-            if ($request->has('job_category_image')) {
-                MetaBox::saveMetaBoxData($data, 'job_category_image', $request->input('job_category_image'));
-            }
+//         if ($data instanceof Category) {
+//             if ($request->has('job_category_image')) {
+//                 MetaBox::saveMetaBoxData($data, 'job_category_image', $request->input('job_category_image'));
+//             }
 
-            if ($request->has('icon_image')) {
-                MetaBox::saveMetaBoxData($data, 'icon_image', $request->input('icon_image'));
-            }
-        }
+//             if ($request->has('icon_image')) {
+//                 MetaBox::saveMetaBoxData($data, 'icon_image', $request->input('icon_image'));
+//             }
+//         }
 
-        if ($data instanceof Post) {
-            MetaBox::saveMetaBoxData($data, 'cover_image', $request->input('cover_image'));
-        }
+//         if ($data instanceof Post) {
+//             MetaBox::saveMetaBoxData($data, 'cover_image', $request->input('cover_image'));
+//         }
 
-        if ($data instanceof Page) {
-            MetaBox::saveMetaBoxData($data, 'background_breadcrumb', $request->input('background_breadcrumb'));
-        }
+//         if ($data instanceof Page) {
+//             MetaBox::saveMetaBoxData($data, 'background_breadcrumb', $request->input('background_breadcrumb'));
+//         }
 
-        if ($data instanceof Job && $request->has('featured_image')) {
-            MetaBox::saveMetaBoxData($data, 'featured_image', $request->input('featured_image'));
-        }
-    }, 120, 3);
+//         if ($data instanceof Job && $request->has('featured_image')) {
+//             MetaBox::saveMetaBoxData($data, 'featured_image', $request->input('featured_image'));
+//         }
+//     }, 120, 3);
 
-    add_filter('account_settings_page', function (?string $html, Account $account) {
-        return $html . Theme::partial('account-custom-fields', compact('account'));
-    }, 127, 2);
-});
+//     add_filter('account_settings_page', function (?string $html, Account $account) {
+//         return $html . Theme::partial('account-custom-fields', compact('account'));
+//     }, 127, 2);
+// });
 
-if (!function_exists('get_currencies_json')) {
-    function get_currencies_json(): array
-    {
-        $currency = get_application_currency();
-        $numberAfterDot = $currency->decimals ?: 0;
+// if (!function_exists('get_currencies_json')) {
+//     function get_currencies_json(): array
+//     {
+//         $currency = get_application_currency();
+//         $numberAfterDot = $currency->decimals ?: 0;
 
-        return [
-            'display_big_money' => config('plugins.real-estate.real-estate.display_big_money_in_million_billion'),
-            'billion' => __('billion'),
-            'million' => __('million'),
-            'is_prefix_symbol' => $currency->is_prefix_symbol,
-            'symbol' => $currency->symbol,
-            'title' => $currency->title,
-            'decimal_separator' => setting('job_board_decimal_separator', '.'),
-            'thousands_separator' => setting('job_board_thousands_separator', ','),
-            'number_after_dot' => $numberAfterDot,
-            'show_symbol_or_title' => true,
-        ];
-    }
-}
+//         return [
+//             'display_big_money' => config('plugins.real-estate.real-estate.display_big_money_in_million_billion'),
+//             'billion' => __('billion'),
+//             'million' => __('million'),
+//             'is_prefix_symbol' => $currency->is_prefix_symbol,
+//             'symbol' => $currency->symbol,
+//             'title' => $currency->title,
+//             'decimal_separator' => setting('job_board_decimal_separator', '.'),
+//             'thousands_separator' => setting('job_board_thousands_separator', ','),
+//             'number_after_dot' => $numberAfterDot,
+//             'show_symbol_or_title' => true,
+//         ];
+//     }
+// }
