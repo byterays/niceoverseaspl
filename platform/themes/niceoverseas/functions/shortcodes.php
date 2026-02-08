@@ -52,7 +52,7 @@ app()->booted(function () {
                     ->wherePublished()
                     ->where('is_featured', true)
                     ->with($with)
-                    ->take((int)$shortcode->limit_company ?: Arr::first(JobBoardHelper::getPerPageParams()))
+                    ->take((int) $shortcode->limit_company ?: Arr::first(JobBoardHelper::getPerPageParams()))
                     ->orderByDesc('created_at')
                     ->get();
 
@@ -91,7 +91,7 @@ app()->booted(function () {
                         'slugable',
                         'metadata',
                     ])
-                    ->limit((int)$shortcode->limit_category ?: Arr::first(JobBoardHelper::getPerPageParams()))
+                    ->limit((int) $shortcode->limit_category ?: Arr::first(JobBoardHelper::getPerPageParams()))
                     ->get();
 
                 return Theme::partial('shortcodes.featured-job-categories', compact('shortcode', 'categories'));
@@ -102,7 +102,7 @@ app()->booted(function () {
             return Theme::partial('shortcodes.featured-job-categories-admin-config', compact('attributes'));
         });
 
-      
+
 
         add_shortcode(
             'apply-banner',
@@ -196,7 +196,7 @@ app()->booted(function () {
                     ],
                     [
                         'with' => $with,
-                        'take' => (int)$shortcode->limit ?: 8,
+                        'take' => (int) $shortcode->limit ?: 8,
                     ]
                 );
 
@@ -487,10 +487,10 @@ app()->booted(function () {
         add_shortcode('job-list', __('Job list'), __('Show job list'), function (ShortcodeCompiler $shortcode) {
             $requestQuery = JobBoardHelper::getJobFilters(request()->input());
 
-            if (! empty($requestQuery['keyword'])) {
+            if (!empty($requestQuery['keyword'])) {
                 SeoHelper::setTitle(__('Search results for ":keyword"', ['keyword' => $requestQuery['keyword']]));
 
-                if (! empty($requestQuery['job_categories'])) {
+                if (!empty($requestQuery['job_categories'])) {
                     $categories = Category::query()
                         ->whereIn('id', $requestQuery['job_categories'])
                         ->pluck('name')
@@ -539,7 +539,7 @@ app()->booted(function () {
                 ],
             );
 
-            if (! $shortcode->jobs_per_page_options) {
+            if (!$shortcode->jobs_per_page_options) {
                 $perPages = JobBoardHelper::getPerPageParams();
             } else {
                 $perPages = array_map(
@@ -589,7 +589,7 @@ app()->booted(function () {
                     ->orderByDesc('is_featured'),
             };
 
-            if (! empty($requestQuery['keyword'])) {
+            if (!empty($requestQuery['keyword'])) {
                 $companies = $companies->where('name', 'LIKE', $requestQuery['keyword'] . '%');
             }
 
@@ -615,9 +615,9 @@ app()->booted(function () {
         });
     }
 
-   
 
-    
+
+
 
     add_shortcode('gallery', __('Gallery'), __('Gallery'), function (Shortcode $shortcode) {
         return Theme::partial('shortcodes.gallery', compact('shortcode'));
@@ -650,7 +650,7 @@ app()->booted(function () {
 
     add_shortcode('job-candidates', __('Job Candidates'), __('Job Candidates'), function (Shortcode $shortcode) {
         $candidates = new LengthAwarePaginator(collect(), 0, Arr::first(JobBoardHelper::getPerPageParams()));
-        if (! JobBoardHelper::isDisabledPublicProfile()) {
+        if (!JobBoardHelper::isDisabledPublicProfile()) {
             $candidates = JobBoardHelper::filterCandidates(request()->input());
         }
 
@@ -678,12 +678,14 @@ app()->booted(function () {
 
     // custom shortcodes
     Shortcode::register('hero-banner', __('Hero banner'), __('Hero banner'), function (ShortcodeCompiler $shortcode) {
-        $tabs = Shortcode::fields()->getTabsData(['title', 'subtitle', 'button_label', 'button_link', 'image'], $shortcode);
+        $tabs = Shortcode::fields()->getTabsData(['main_heading', 'small_heading', 'features', 'button_label', 'button_link', 'slide_image'], $shortcode);
         $style = in_array(
             $shortcode->style,
             [
                 'style-1',
                 'style-2',
+                'style-3',
+                'style-4'
             ]
         ) ? $shortcode->style : 'style-1';
 
@@ -752,9 +754,9 @@ app()->booted(function () {
 
 
     Shortcode::register('clients-carousel', __('Clients Carousel'), __('Clients Carousel'), function (ShortcodeCompiler $shortcode) {
-        $clients = Company::query()        
-        ->wherePublished()
-        ->get();
+        $clients = Company::query()
+            ->wherePublished()
+            ->get();
         return Theme::partial("shortcodes.clients.style-1", compact('shortcode', 'clients'));
     });
 

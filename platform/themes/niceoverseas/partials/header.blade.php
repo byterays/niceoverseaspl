@@ -4,20 +4,21 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    
+
     {!! Theme::partial('theme-meta') !!}
     <!-- favicons Icons -->
     <link rel="apple-touch-icon" sizes="180x180" href="/images/favicons/apple-touch-icon.png">
     <link rel="icon" type="image/png" sizes="32x32" href="/images/favicons/favicon-32x32.png">
     <link rel="icon" type="image/png" sizes="16x16" href="/images/favicons/favicon-16x16.png">
-    
+
     <meta name="description" content="Nice Overseas: Your Premier Partner for Global Recruitment Solutions">
 
     <!-- fonts -->
     <link rel="preconnect" href="//fonts.googleapis.com/">
     <link rel="preconnect" href="//fonts.gstatic.com/" crossorigin>
-    <link href="//fonts.googleapis.com/css2?family=Archivo:ital,wght@0,100..900;1,100..900&amp;display=swap" rel="stylesheet">
-    
+    <link href="//fonts.googleapis.com/css2?family=Archivo:ital,wght@0,100..900;1,100..900&amp;display=swap"
+        rel="stylesheet">
+
     {!! Theme::header() !!}
 
 </head>
@@ -25,13 +26,13 @@
 <body>
 
     <!-- Preloader Start -->
-	<div class="preloader">
-		<div class="loading-container">
-			<div class="loading"></div>
-			<div id="loading-icon"><img src="images/loader.svg" alt=""></div>
-		</div>
-	</div>
-	<!-- Preloader End -->
+    <div class="preloader">
+        <div class="loading-container">
+            <div class="loading"></div>
+            <div id="loading-icon"><img src="/public/themes/niceoverseas/images/loader.svg" alt=""></div>
+        </div>
+    </div>
+    <!-- Preloader End -->
 
     <!-- Topbar Section Start -->
     <div class="topbar">
@@ -41,8 +42,9 @@
                     <!-- Topbar Contact Information Start -->
                     <div class="topbar-contact-info">
                         <ul>
-                            <li><a href="#"><i class="fa-solid fa-envelope"></i>info@domainname.com</a></li>
-                            <li><a href="#"><i class="fa-solid fa-phone"></i>+123 465 789</a></li>
+                            <li><a href="#"><i class="fa-solid fa-envelope"></i>{{setting('email_address')}}</a></li>
+                            <li> <a href="tel:{{setting('contact_phone')}}"><i
+                                        class="fa-solid fa-phone"></i>{{setting('contact_phone')}}</a></li>
                         </ul>
                     </div>
                     <!-- Topbar Contact Information End -->
@@ -65,36 +67,36 @@
     <!-- Topbar Section End -->
 
     <!-- Header Start -->
-	<header class="main-header">
-		<div class="header-sticky">
-			<nav class="navbar navbar-expand-lg">
-				<div class="container">
-					<!-- Logo Start -->
-					<a class="navbar-brand" href="/">						
+    <header class="main-header">
+        <div class="header-sticky">
+            <nav class="navbar navbar-expand-lg">
+                <div class="container">
+                    <!-- Logo Start -->
+                    <a class="navbar-brand" href="/">
                         <img src="{{ RvMedia::getImageUrl(theme_option('logo')) }}" width="250">
-					</a>
-					<!-- Logo End -->
+                    </a>
+                    <!-- Logo End -->
 
-					<!-- Main Menu Start -->
-					<div class="collapse navbar-collapse main-menu">
+                    <!-- Main Menu Start -->
+                    <div class="collapse navbar-collapse main-menu">
                         <div class="nav-menu-wrapper">
                             {!! Menu::renderMenuLocation('main-menu', [
                                 'view' => 'main-menu',
-                                'options'=>['class'=>"navbar-nav mr-auto", "id"=>"menu"]
+                                'options' => ['class' => "navbar-nav mr-auto", "id" => "menu"]
                             ]) !!}
                         </div>
 
                         <!-- Header Btn Start -->
                         <div class="header-btn">
-                            <a href="contact.html" class="btn-default btn-highlighted">get started</a>
+                            <a href="contact" class="btn-default btn-highlighted">Get In Touch</a>
                         </div>
-                        <!-- Header Btn End -->                
-					</div>
-					<!-- Main Menu End -->
-					<div class="navbar-toggle"></div>
-				</div>
-			</nav>
-			<div class="responsive-menu"></div>
-		</div>
-	</header>
-	<!-- Header End -->
+                        <!-- Header Btn End -->
+                    </div>
+                    <!-- Main Menu End -->
+                    <div class="navbar-toggle"></div>
+                </div>
+            </nav>
+            <div class="responsive-menu"></div>
+        </div>
+    </header>
+    <!-- Header End -->

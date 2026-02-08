@@ -21,10 +21,10 @@ use Illuminate\Http\Request;
 
 register_page_template([
     'default' => 'Default',
-    'fullwidth-page' => 'Full Width Page',
-    'info-page'=> 'Info Page',
-    'page-detail' => __('Page detail full width'),
-    'page-detail-boxed' => __('Page detail boxed'),
+    // 'fullwidth-page' => 'Full Width Page',
+    // 'info-page'=> 'Info Page',
+    // 'page-detail' => __('Page detail full width'),
+    // 'page-detail-boxed' => __('Page detail boxed'),
 ]);
 
 
@@ -67,6 +67,7 @@ register_sidebar([
 ]);
 
 
+
 Menu::addMenuLocation('footer-menu', 'Footer navigation');
 
 // Uncomment lines below to register second sidebar
@@ -75,6 +76,8 @@ Menu::addMenuLocation('footer-menu', 'Footer navigation');
 //     'name'        => 'Second sidebar',
 //     'description' => 'This is a sample sidebar for miraclehrhub theme',
 // ]);
+
+
 
 RvMedia::setUploadPathAndURLToPublic();
 
@@ -228,7 +231,7 @@ app()->booted(function () {
     }, 127, 2);
 });
 
-if (! function_exists('get_currencies_json')) {
+if (!function_exists('get_currencies_json')) {
     function get_currencies_json(): array
     {
         $currency = get_application_currency();

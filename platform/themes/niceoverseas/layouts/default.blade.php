@@ -1,5 +1,7 @@
 {!! Theme::partial('header') !!}
 
-   {!! Theme::content() !!}
+
+{!! Theme::content() !!}
+
 
 {!! Theme::partial('footer') !!}
