@@ -172,7 +172,6 @@
 
 
 {{-- STYLE 4 --}}
-
 <div class="hero-style-field" data-style="style-4">
 
     {!! Shortcode::fields()->tabs([
@@ -200,7 +199,7 @@
             'type'  => 'text',
             'title' => __('Button Link'),
         ],
-    ], $attributes) !!}
+    ], $attributes, 6) !!}
 </div>
 
 
