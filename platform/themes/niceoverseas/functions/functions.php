@@ -21,7 +21,7 @@ use Illuminate\Http\Request;
 use Botble\Widget\Facades\Widget;
 
 register_page_template([
-    'default' => 'Default',
+    'default' => 'Home page',
     'page-sidebar' =>'Page with sidebar'
 ]);
 
@@ -50,20 +50,32 @@ add_action(BASE_ACTION_META_BOXES, function ($context, $object) {
     );
 }, 120, 2);
 
-add_action('save_post', function ($postId, $request, $object) {
+
+add_action(BASE_ACTION_AFTER_UPDATE_CONTENT, function ($screen, Request $request, $object) {
+
+    // Ensure this is Page save
+    if ($screen !== PAGE_MODULE_SCREEN_NAME) {
+        return;
+    }
+
     if (!($object instanceof Page)) {
         return;
     }
 
-    if ($request->has('sidebar_widgets')) {
+    // Save sidebar widgets
+    if ($request->has('sidebar_widgets') && is_array($request->input('sidebar_widgets'))) {
+
         MetaBox::saveMetaBoxData(
             $object,
             'sidebar_widgets',
             json_encode(array_values($request->input('sidebar_widgets')))
         );
-    }
-}, 120, 3);
 
+    } else {
+        MetaBox::deleteMetaBoxData($object, 'sidebar_widgets');
+    }
+
+}, 120, 3);
 
 
 function theme_sidebar_widget_types()

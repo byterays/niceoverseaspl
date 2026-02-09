@@ -80,7 +80,7 @@
                                 <i class="fa-solid fa-phone"></i>
                             </div>
                             <div class="footer-contact-content">
-                                <p><a href="tel:+123465789">+91 123 465 789</a></p>
+                                <p><a href="tel:{{setting('contact_phone')}}">{{setting('contact_phone')}}</a></p>
                             </div>
                         </div>
                         <!-- Footer Contact Item End -->
@@ -91,7 +91,7 @@
                                 <i class="fa-solid fa-envelope"></i>
                             </div>
                             <div class="footer-contact-content">
-                                <p><a href="mailto:info@domainname.com">info@domainname.com</a></p>
+                                <p><a href="mailto:{{setting('email_address')}}">{{setting('email_address')}}</a></p>
                             </div>
                         </div>
                         <!-- Footer Contact Item End -->
@@ -102,7 +102,7 @@
                                 <i class="fa-solid fa-location-dot"></i>
                             </div>
                             <div class="footer-contact-content">
-                                <p>4140 Parker Rd. Allentown, New Mexico 31134</p>
+                                <p>{{setting('office_address')}}</p>
                             </div>
                         </div>
                         <!-- Footer Contact Item End -->
