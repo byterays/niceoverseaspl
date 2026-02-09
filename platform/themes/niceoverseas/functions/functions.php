@@ -20,11 +20,12 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Http\Request;
 use Botble\Widget\Facades\Widget;
 
+RvMedia::setUploadPathAndURLToPublic();
+
 register_page_template([
     'default' => 'Home page',
     'page-sidebar' =>'Page with sidebar'
 ]);
-
 
 add_action(BASE_ACTION_META_BOXES, function ($context, $object) {
     if ($context !== 'advanced' || !($object instanceof Page)) {
@@ -49,7 +50,6 @@ add_action(BASE_ACTION_META_BOXES, function ($context, $object) {
         'default'
     );
 }, 120, 2);
-
 
 add_action(BASE_ACTION_AFTER_UPDATE_CONTENT, function ($screen, Request $request, $object) {
 
@@ -76,7 +76,6 @@ add_action(BASE_ACTION_AFTER_UPDATE_CONTENT, function ($screen, Request $request
     }
 
 }, 120, 3);
-
 
 function theme_sidebar_widget_types()
 {
@@ -139,7 +138,7 @@ function theme_sidebar_widget_types()
 
 
 
-RvMedia::setUploadPathAndURLToPublic();
+
 
 
 // app()->booted(function () {

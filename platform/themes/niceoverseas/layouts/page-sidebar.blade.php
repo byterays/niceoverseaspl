@@ -1,10 +1,11 @@
 {!! Theme::partial('header') !!}
 
+{!! Theme::partial('page-header') !!}
+
 @php
     $page = Theme::get('page');
-    $widgets = $page
-        ? json_decode($page->getMetaData('sidebar_widgets', true) ?: '[]', true)
-        : [];
+
+    $widgets = $page ? json_decode($page->getMetaData('sidebar_widgets', true) ?: '[]', true) : [];
 @endphp
 
 <div class="page-single">
@@ -15,10 +16,7 @@
                 <div class="col-lg-4">
                     <div class="page-single-sidebar">
                         @foreach ($widgets as $widget)
-                            @include(
-                                Theme::getThemeNamespace().'::partials.sidebar-widgets.'.$widget['type'],
-                                ['widget' => $widget]
-                            )
+                            @include(Theme::getThemeNamespace() . '::partials.sidebar-widgets.' . $widget['type'], ['widget' => $widget])
                         @endforeach
                     </div>
                 </div>

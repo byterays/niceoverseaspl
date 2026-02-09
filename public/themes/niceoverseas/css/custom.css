@@ -2937,7 +2937,7 @@ header.main-header .header-sticky.active{
 	background-repeat: no-repeat;
 	background-position: center center;
 	background-size: 100% auto;
-	padding: 80px 0;
+	padding: 40px 0;
 }
 
 .page-header-box{
@@ -2947,7 +2947,7 @@ header.main-header .header-sticky.active{
 .page-header-box h1{
 	display: inline-block;
     color: var(--white-color);
-    font-size: 80px;
+    font-size: 40px;
     font-weight: 700;
     line-height: 1.1em;
 	letter-spacing: -0.02em;
