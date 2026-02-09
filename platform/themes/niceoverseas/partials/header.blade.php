@@ -29,7 +29,11 @@
     <div class="preloader">
         <div class="loading-container">
             <div class="loading"></div>
-            <div id="loading-icon"><img src="/public/themes/niceoverseas/images/loader.svg" alt=""></div>
+            @php
+                $favicon = theme_option('favicon') ? RvMedia::getImageUrl(theme_option('favicon')) : asset('themes/your-theme/images/favicon.png'); 
+            @endphp
+
+            <div id="loading-icon"><img src="{{ $favicon }}" alt=""></div>
         </div>
     </div>
     <!-- Preloader End -->
@@ -81,9 +85,9 @@
                     <div class="collapse navbar-collapse main-menu">
                         <div class="nav-menu-wrapper">
                             {!! Menu::renderMenuLocation('main-menu', [
-                                'view' => 'main-menu',
-                                'options' => ['class' => "navbar-nav mr-auto", "id" => "menu"]
-                            ]) !!}
+    'view' => 'main-menu',
+    'options' => ['class' => "navbar-nav mr-auto", "id" => "menu"]
+]) !!}
                         </div>
 
                         <!-- Header Btn Start -->
