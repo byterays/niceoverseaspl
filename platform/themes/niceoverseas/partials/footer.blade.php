@@ -102,7 +102,8 @@
                                 <i class="fa-solid fa-location-dot"></i>
                             </div>
                             <div class="footer-contact-content">
-                                <p>{{setting('office_address')}}</p>
+                               <p>{!! nl2br(e(setting('office_address'))) !!}</p>
+
                             </div>
                         </div>
                         <!-- Footer Contact Item End -->
