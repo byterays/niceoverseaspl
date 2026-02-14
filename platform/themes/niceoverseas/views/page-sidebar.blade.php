@@ -1,3 +1,5 @@
+@extends(Theme::getLayout('sidebar-layout'))
+
 @php
     Theme::set('pageTitle', $page->name);
     Theme::set('pageDescription', $page->description);
@@ -5,6 +7,11 @@
     Theme::set('pageImage', $page->image);
 @endphp
 
+@php
+
+echo "reched here";
+exit;
+@endphp
 {{-- Optional featured image --}}
 @if ($page->image)
     <div class="page-single-image mb-4">
@@ -12,8 +19,3 @@
     </div>
 @endif
 
-{{-- Page title --}}
-<h1>{{ $page->name }}</h1>
-
-{{-- Page content (same as page.blade.php) --}}
-{!! apply_filters(PAGE_FILTER_FRONT_PAGE_CONTENT, Html::tag('div', BaseHelper::clean($page->content), ['class' => 'ck-content'])->toHtml(), $page) !!}
