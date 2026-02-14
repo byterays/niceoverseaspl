@@ -25,10 +25,7 @@
                             @endphp
 
                             @if ($type)
-                                        {!! Theme::partial(
-                                    'widgets.' . str_replace('_', '-', $type),
-                                    ['settings' => $settings]
-                                ) !!}
+                                {!! Theme::partial('widgets.' . $type, ['settings' => $settings]) !!}
                             @endif
 
                         @endforeach
