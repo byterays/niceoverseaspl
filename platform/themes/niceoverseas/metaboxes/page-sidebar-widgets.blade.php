@@ -35,8 +35,8 @@ function renderWidgets() {
 
                 <select onchange="updateWidget(${index}, this.value)" class="form-control">
                     <option value="">Select Widget</option>
-                    <option value="service_categories" ${widget === 'service_categories' ? 'selected' : ''}>Service Categories</option>
-                    <option value="sidebar_cta" ${widget === 'sidebar_cta' ? 'selected' : ''}>Sidebar CTA</option>
+                    <option value="service-categories" ${widget === 'service-categories' ? 'selected' : ''}>Service Categories</option>
+                    <option value="sidebar-cta" ${widget === 'sidebar-cta' ? 'selected' : ''}>Sidebar CTA</option>
                 </select>
 
                 <button type="button"
