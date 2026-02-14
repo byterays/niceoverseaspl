@@ -3711,10 +3711,8 @@ header.main-header .header-sticky.active{
 	margin-bottom: 120px;
 }
 
-.sidebar-cta-logo img{
-	width: 100%;
-	max-width: 60px;
-	border-radius: 50%;
+.sidebar-cta-logo img{	
+	max-width: 690%;
 }
 
 .sidebar-cta-content h3{

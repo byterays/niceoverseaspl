@@ -1,19 +1,44 @@
+@php
+    $heading = $settings['heading'] ?? 'Take control of your career unlock opportunities today!';
+    $phone = $settings['phone'] ?? '';
+    $logo = $settings['logo'] ?? '';
+    $phoneIcon = $settings['phone_icon'] ?? '';
+    $delay = $settings['animation_delay'] ?? '0.25s';
+@endphp
 
-    <!-- Sidebar CTA Box Start -->
-    <div class="sidebar-cta-box wow fadeInUp" data-wow-delay="0.25s"
-        style="visibility: visible; animation-delay: 0.25s; animation-name: fadeInUp;">
-        <!-- Sidebar CTA Content Start -->
+<!-- Sidebar CTA Box Start -->
+<div class="sidebar-cta-box wow fadeInUp"
+     data-wow-delay="{{ $delay }}"
+     style="animation-delay: {{ $delay }};">
+
+    <!-- Sidebar CTA Logo Start -->
+    @if($logo)
         <div class="sidebar-cta-logo">
-            <img src="images/sidebar-cta-logo.svg" alt="">
+            <img src="{{ $logo }}" alt="CTA Logo">
         </div>
-        <!-- Sidebar CTA Content End -->
+    @endif
+    <!-- Sidebar CTA Logo End -->
 
-        <!-- Sidebar CTA Contact Start -->
-        <div class="sidebar-cta-content">
-            <h3>Take control of your career unlock opportunities today!</h3>
-            <a href="tel:+123465789" class="btn-default"><img src="images/icon-sidebar-cta-phone.svg" alt="">+123 465
-                789</a>
-        </div>
-        <!-- Sidebar CTA Contact End -->
+    <!-- Sidebar CTA Content Start -->
+    <div class="sidebar-cta-content">
+
+        @if($heading)
+            <h3>{{ $heading }}</h3>
+        @endif
+
+        @if($phone)
+            <a href="tel:{{ $phone }}" class="btn-default">
+
+                @if($phoneIcon)
+                    <img src="{{ $phoneIcon }}" alt="Phone Icon">
+                @endif
+
+                {{ $phone }}
+            </a>
+        @endif
+
     </div>
-    <!-- Sidebar CTA Box End -->
+    <!-- Sidebar CTA Content End -->
+
+</div>
+<!-- Sidebar CTA Box End -->
