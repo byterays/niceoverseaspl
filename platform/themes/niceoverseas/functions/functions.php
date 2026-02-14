@@ -32,9 +32,9 @@ app()->booted(function () {
     ]);
 
     register_sidebar([
-        'id' => 'page_sidebar',
-        'name' => 'Page Sidebar',
-        'description' => 'Sidebar for detail pages',
+        'id' => 'primary_sidebar',
+        'name' => 'Primary Sidebar',
+        'description' => 'Global sidebar displayed on all pages',
     ]);
 
 });

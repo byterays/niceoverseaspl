@@ -4,6 +4,7 @@
     $page = Theme::get('page');
     $widgets = MetaBox::getMetaData($page, 'page_sidebar_widgets', true);
     $has_widgets = !empty($widgets);
+
     $colClass = $has_widgets ? "col-lg-8" : "col-lg-12";
 
 @endphp
@@ -17,6 +18,11 @@
             @if ($has_widgets)
                 <div class="col-lg-4">
                     <div class="page-single-sidebar">
+
+                        {{-- GLOBAL WIDGETS --}}
+
+                        {!! dynamic_sidebar('primary_sidebar') !!}
+
                         @foreach ($widgets as $widget)
 
                             @php
@@ -29,6 +35,7 @@
                             @endif
 
                         @endforeach
+
 
                     </div>
 
