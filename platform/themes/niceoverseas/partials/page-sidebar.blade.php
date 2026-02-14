@@ -1,1 +1,0 @@
-{!! dynamic_sidebar($sidebarId) !!}
