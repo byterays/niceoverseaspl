@@ -18,22 +18,33 @@
     + Add Widget
 </button>
 
+
 <script>
 
 let sidebarWidgets = {!! $widgets ?: '[]' !!};
 
 function renderWidgets() {
+
     const wrapper = document.getElementById('sidebar-widget-wrapper');
     wrapper.innerHTML = '';
 
     sidebarWidgets.forEach((widget, index) => {
+
         wrapper.innerHTML += `
-            <div class="mb-2">
+            <div class="sidebar-widget-item mb-2 d-flex gap-2">
+
                 <select onchange="updateWidget(${index}, this.value)" class="form-control">
                     <option value="">Select Widget</option>
-                    <option value="service-categories" ${widget === 'service-categories' ? 'selected' : ''}>Service Categories</option>
-                    <option value="sidebar-cta" ${widget === 'sidebar-cta' ? 'selected' : ''}>Sidebar CTA</option>
+                    <option value="service_categories" ${widget === 'service_categories' ? 'selected' : ''}>Service Categories</option>
+                    <option value="sidebar_cta" ${widget === 'sidebar_cta' ? 'selected' : ''}>Sidebar CTA</option>
                 </select>
+
+                <button type="button"
+                        class="btn btn-danger btn-sm"
+                        onclick="removeWidget(${index})">
+                    ✕
+                </button>
+
             </div>
         `;
     });
@@ -48,6 +59,11 @@ function addSidebarWidget() {
 
 function updateWidget(index, value) {
     sidebarWidgets[index] = value;
+    document.getElementById('page_sidebar_widgets_json').value = JSON.stringify(sidebarWidgets);
+}
+
+function removeWidget(index) {
+    sidebarWidgets.splice(index, 1);
     renderWidgets();
 }
 
