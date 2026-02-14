@@ -1,34 +1,34 @@
 <?php
-    use Botble\Base\Facades\MetaBox;
-    use Botble\Page\Models\Page;
+use Botble\Base\Facades\MetaBox;
+use Botble\Page\Models\Page;
 
 
-    add_action(BASE_ACTION_META_BOXES, function () {
+add_action(BASE_ACTION_META_BOXES, function () {
 
-        MetaBox::addMetaBox(
-            'page_sidebar_widgets',
-            __('Page Sidebar Widgets'),
-            function ($object) {
+    MetaBox::addMetaBox(
+        'page_sidebar_widgets',
+        __('Page Sidebar Widgets'),
+        function ($object) {
 
-                $widgets = get_meta_data($object, 'page_sidebar_widgets', true);
+            $widgets = get_meta_data($object, 'page_sidebar_widgets', true);
 
-                if (!is_array($widgets)) {
-                    $widgets = [];
-                }
+            if (!is_array($widgets)) {
+                $widgets = [];
+            }
 
-                return view(Theme::getThemeNamespace() . '::metaboxes.page-sidebar-widgets',  compact('widgets'));
-            
+            return view(Theme::getThemeNamespace() . '::metaboxes.page-sidebar-widgets', compact('widgets'));
 
-            },
-            \Botble\Page\Models\Page::class,
-            'side',
-            'default'
-        );
 
-    }, 24);
+        },
+        \Botble\Page\Models\Page::class,
+        'side',
+        'default'
+    );
 
-    
-   add_action(BASE_ACTION_AFTER_UPDATE_CONTENT, function ($type, $request, $object) {
+}, 24);
+
+
+add_action(BASE_ACTION_AFTER_UPDATE_CONTENT, function ($type, $request, $object) {
 
     if (!($object instanceof Page)) {
         return;
