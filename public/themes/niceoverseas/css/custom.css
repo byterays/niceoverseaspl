@@ -10,6 +10,7 @@
 	--dark-divider-color		: #FFFFFF1A;
 	--error-color				: rgb(230, 87, 87);
 	--default-font				: "Archivo", sans-serif;
+	--nav-bar-bg				: #1a7dcf;
 }
 
 /************************************/
@@ -515,7 +516,7 @@ body{
 
 header.main-header{
 	position: relative;
-	background-color: var(--accent-color);
+	background-color: var(--nav-bar-bg);
 	border-bottom: 1px solid var(--dark-divider-color);
 	z-index: 100;
 }
