@@ -2,8 +2,9 @@
 
 namespace Theme\Niceoverseas\Widgets;
 
-use Botble\Base\Forms\FormAbstract;
 use Botble\Widget\AbstractWidget;
+use Botble\Base\Forms\FormAbstract;
+use Theme;
 
 class SidebarCtaWidget extends AbstractWidget
 {

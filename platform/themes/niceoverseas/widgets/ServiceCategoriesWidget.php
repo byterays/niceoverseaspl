@@ -1,7 +1,7 @@
 <?php
 
-namespace Theme\Niceoverseas\Widgets;
 
+use Theme;
 use Botble\Base\Forms\FormAbstract;
 use Botble\Widget\AbstractWidget;
 
