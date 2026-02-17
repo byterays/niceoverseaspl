@@ -21,8 +21,6 @@
 
                         {{-- GLOBAL WIDGETS --}}
 
-                        {!! dynamic_sidebar('primary_sidebar') !!}
-
                         @foreach ($widgets as $widget)
 
                             @php
