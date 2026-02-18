@@ -173,6 +173,23 @@ app()->booted(function () {
     });
 
 
+    //how it - works
+    Shortcode::register(
+        'how-it-works',
+        __('How It Works Section'),
+        __('How It Works section with steps and images'),
+        function ($shortcode) {
+            return Theme::partial('shortcodes.how-it-works.how-it-works', compact('shortcode'));
+        }
+    );
+
+    Shortcode::setAdminConfig('how-it-works', function ($attributes) {
+        return Theme::partial(
+            'shortcodes.how-it-works.admin-config',
+            compact('attributes')
+        );
+    });
+
 
 
     ////////////////////////////////////////////////////////
@@ -211,14 +228,6 @@ app()->booted(function () {
 
     shortcode()->setAdminConfig('gallery', function (array $attributes) {
         return Theme::partial('shortcodes.gallery-admin-config', compact('attributes'));
-    });
-
-    add_shortcode('how-it-works', __('How It Works'), __('How It Works'), function (Shortcode $shortcode) {
-        return Theme::partial('shortcodes.how-it-works', compact('shortcode'));
-    });
-
-    shortcode()->setAdminConfig('how-it-works', function (array $attributes) {
-        return Theme::partial('shortcodes.how-it-works-admin-config', compact('attributes'));
     });
 
     if (is_plugin_active('testimonial')) {
