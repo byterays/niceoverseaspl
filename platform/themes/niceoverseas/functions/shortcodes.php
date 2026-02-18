@@ -155,6 +155,23 @@ app()->booted(function () {
     });
 
 
+    //out benefits
+    Shortcode::register(
+        'our-benefits',
+        __('Our Benefits Section'),
+        __('Our Benefits section with content, list and images'),
+        function ($shortcode) {
+            return Theme::partial('shortcodes.our-benefits.our-benefits', compact('shortcode'));
+        }
+    );
+
+    Shortcode::setAdminConfig('our-benefits', function ($attributes) {
+        return Theme::partial(
+            'shortcodes.our-benefits.admin-config',
+            compact('attributes')
+        );
+    });
+
 
 
 
