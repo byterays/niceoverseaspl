@@ -92,8 +92,6 @@ app()->booted(function () {
     });
 
 
-
-
     //our services
 
     Shortcode::register(
@@ -118,8 +116,85 @@ app()->booted(function () {
     });
 
 
-    //intro block
 
+    // what we do
+    Shortcode::register(
+        'what-we-do',
+        __('What We Do Section'),  // This is the name
+        __('What We Do section with image, features and list'),  // This is the description
+        function (ShortcodeCompiler $shortcode) {
+            return Theme::partial('shortcodes.what-we-do.what-we-do', compact('shortcode'));
+        }
+    );
+
+    Shortcode::setAdminConfig('what-we-do', function ($attributes) {
+
+        return Theme::partial(
+            'shortcodes.what-we-do.admin-config',
+            compact('attributes')
+        );
+    });
+
+
+
+    //why choose us
+    Shortcode::register(
+        'why-choose-us',
+        __('Why Choose Us Section'),
+        __('Why Choose Us section with image, video and items'),
+        function ($shortcode) {
+            return Theme::partial('shortcodes.why-choose-us.why-choose-us', compact('shortcode'));
+        }
+    );
+
+    Shortcode::setAdminConfig('why-choose-us', function ($attributes) {
+        return Theme::partial(
+            'shortcodes.why-choose-us.admin-config',
+            compact('attributes')
+        );
+    });
+
+
+    //out benefits
+    Shortcode::register(
+        'our-benefits',
+        __('Our Benefits Section'),
+        __('Our Benefits section with content, list and images'),
+        function ($shortcode) {
+            return Theme::partial('shortcodes.our-benefits.our-benefits', compact('shortcode'));
+        }
+    );
+
+    Shortcode::setAdminConfig('our-benefits', function ($attributes) {
+        return Theme::partial(
+            'shortcodes.our-benefits.admin-config',
+            compact('attributes')
+        );
+    });
+
+
+    //how it - works
+    Shortcode::register(
+        'how-it-works',
+        __('How It Works Section'),
+        __('How It Works section with steps and images'),
+        function ($shortcode) {
+            return Theme::partial('shortcodes.how-it-works.how-it-works', compact('shortcode'));
+        }
+    );
+
+    Shortcode::setAdminConfig('how-it-works', function ($attributes) {
+        return Theme::partial(
+            'shortcodes.how-it-works.admin-config',
+            compact('attributes')
+        );
+    });
+
+
+
+    ////////////////////////////////////////////////////////
+
+    //intro block
 
     Shortcode::register('intro-block', __('Intro Block'), __('Intro Block'), function (ShortcodeCompiler $shortcode) {
         $tabs = Shortcode::fields()->getTabsData(['icon', 'title', 'description', 'image', 'link_url', 'link_text'], $shortcode);
@@ -153,14 +228,6 @@ app()->booted(function () {
 
     shortcode()->setAdminConfig('gallery', function (array $attributes) {
         return Theme::partial('shortcodes.gallery-admin-config', compact('attributes'));
-    });
-
-    add_shortcode('how-it-works', __('How It Works'), __('How It Works'), function (Shortcode $shortcode) {
-        return Theme::partial('shortcodes.how-it-works', compact('shortcode'));
-    });
-
-    shortcode()->setAdminConfig('how-it-works', function (array $attributes) {
-        return Theme::partial('shortcodes.how-it-works-admin-config', compact('attributes'));
     });
 
     if (is_plugin_active('testimonial')) {

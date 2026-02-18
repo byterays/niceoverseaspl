@@ -20,11 +20,9 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Http\Request;
 use Botble\Widget\Facades\Widget;
 
-
-
 app()->booted(function () {
-
     RvMedia::setUploadPathAndURLToPublic();
+
     register_page_template([
         'home' => "Home page",
         'default' => 'Default',
@@ -37,4 +35,5 @@ app()->booted(function () {
         'description' => 'Global sidebar displayed on all pages',
     ]);
 
+    
 });

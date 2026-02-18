@@ -24,7 +24,7 @@
         "botble/sitemap": "*@dev",
         "botble/slug": "*@dev",
         "botble/theme": "*@dev",
-        "botble/widget": "*@dev",
+        "botble/widget": "dev-main",
         "doctrine/dbal": "^3.8",
         "guzzlehttp/guzzle": "^7.7",
         "laravel/framework": "^10.24",

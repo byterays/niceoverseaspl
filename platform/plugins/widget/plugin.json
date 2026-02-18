@@ -1,0 +1,10 @@
+{
+    "id": "Botble.Widget",
+    "name": "Widget",
+    "namespace": "Botble\\Widget\\",
+    "provider": "Botble\\Widget\\Providers\\WidgetServiceProvider",
+    "author": "Botble Technologies",
+    "url": "https://botble.com",
+    "version": "1.0.0",
+    "description": "Widget management plugin for Botble CMS"
+}
