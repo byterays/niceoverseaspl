@@ -137,6 +137,25 @@ app()->booted(function () {
 
 
 
+    //why choose us
+    Shortcode::register(
+        'why-choose-us',
+        __('Why Choose Us Section'),
+        __('Why Choose Us section with image, video and items'),
+        function ($shortcode) {
+            return Theme::partial('shortcodes.why-choose-us.why-choose-us', compact('shortcode'));
+        }
+    );
+
+    Shortcode::setAdminConfig('why-choose-us', function ($attributes) {
+        return Theme::partial(
+            'shortcodes.why-choose-us.admin-config',
+            compact('attributes')
+        );
+    });
+
+
+
 
 
     ////////////////////////////////////////////////////////

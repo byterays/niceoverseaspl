@@ -1,89 +1,195 @@
-<div class="form-group mb-3">
-    <label class="control-label">{{ __('Subtitle') }}</label>
-    <input type="text"
-           name="subtitle"
-           value="{{ Arr::get($attributes, 'subtitle') }}"
-           class="form-control">
+@php
+    $items = [];
+    $listItems = [];
+
+    foreach ($attributes as $key => $value) {
+
+        if (str_starts_with($key, 'item_title_')) {
+            $index = str_replace('item_title_', '', $key);
+
+            $items[$index]['title'] = $value;
+            $items[$index]['icon'] =
+                $attributes['item_icon_' . $index] ?? '';
+            $items[$index]['description'] =
+                $attributes['item_description_' . $index] ?? '';
+        }
+
+        if (str_starts_with($key, 'list_item_')) {
+            $listItems[] = $value;
+        }
+    }
+
+    ksort($items);
+@endphp
+
+<div class="form-group">
+    <label>Small Title</label>
+    <input type="text" name="small_title"
+           class="form-control"
+           value="{{ $attributes['small_title'] ?? '' }}">
 </div>
 
-<div class="form-group mb-3">
-    <label class="control-label">{{ __('Title') }}</label>
-    <input type="text"
-           name="title"
-           value="{{ Arr::get($attributes, 'title') }}"
-           class="form-control">
+<div class="form-group">
+    <label>Main Title (HTML allowed)</label>
+    <textarea name="main_title"
+              class="form-control"
+              rows="3">{{ $attributes['main_title'] ?? '' }}</textarea>
 </div>
 
-<div class="form-group mb-3">
-    <label class="control-label">{{ __('Highlight Text') }}</label>
-    <input type="text"
-           name="highlight_text"
-           value="{{ Arr::get($attributes, 'highlight_text') }}"
-           class="form-control">
-</div>
-
-<div class="form-group mb-3">
-    <label class="control-label">{{ __('Description') }}</label>
+<div class="form-group">
+    <label>Description</label>
     <textarea name="description"
-              rows="3"
-              class="form-control">{{ Arr::get($attributes, 'description') }}</textarea>
+              class="form-control"
+              rows="3">{{ $attributes['description'] ?? '' }}</textarea>
 </div>
 
-<div class="form-group mb-3">
-    <label class="control-label">{{ __('Main Image') }}</label>
-    {!! Form::mediaImage('image', Arr::get($attributes, 'image')) !!}
+<hr>
+
+<h4>Bullet List</h4>
+
+<div id="list-wrapper">
+    @foreach($listItems as $index => $item)
+        <div class="list-item mb-2">
+            <input type="text"
+                   name="list_item_{{ $index }}"
+                   class="form-control"
+                   value="{{ $item }}">
+            <button type="button"
+                    class="btn btn-danger btn-sm remove-list">
+                Remove
+            </button>
+        </div>
+    @endforeach
 </div>
 
-<div class="form-group mb-3">
-    <label class="control-label">{{ __('Video URL') }}</label>
+<button type="button"
+        class="btn btn-primary btn-sm mt-2"
+        id="add-list">
+    Add List Item
+</button>
+
+<hr>
+
+<div class="form-group">
+    <label>Right Image</label>
+    {!! Form::mediaImage('image', $attributes['image'] ?? null) !!}
+</div>
+
+<div class="form-group">
+    <label>Video URL</label>
     <input type="text"
            name="video_url"
-           value="{{ Arr::get($attributes, 'video_url') }}"
-           class="form-control">
+           class="form-control"
+           value="{{ $attributes['video_url'] ?? '' }}">
 </div>
 
 <hr>
 
-<h5 class="mb-3">{{ __('Feature List') }}</h5>
+<h4>Bottom Items</h4>
 
-<div class="repeater-wrapper"
-     data-bb-toggle="shortcode-repeater"
-     data-name="features"
-     data-value='@json(json_decode(Arr::get($attributes, "features", "[]"), true))'>
+<div id="items-wrapper">
+    @foreach($items as $index => $item)
+        <div class="item-box border p-3 mb-3">
+            {!! Form::mediaImage("item_icon_$index", $item['icon']) !!}
+            <input type="text"
+                   name="item_title_{{ $index }}"
+                   class="form-control mt-2"
+                   value="{{ $item['title'] }}"
+                   placeholder="Item title">
+            <textarea name="item_description_{{ $index }}"
+                      class="form-control mt-2"
+                      rows="2"
+                      placeholder="Item description">{{ $item['description'] }}</textarea>
 
-    <div class="repeater-template">
-        <div class="form-group mb-3">
-            <label>{{ __('Feature Text') }}</label>
-            <input type="text" data-name="text" class="form-control">
+            <button type="button"
+                    class="btn btn-danger btn-sm mt-2 remove-item">
+                Remove
+            </button>
         </div>
-    </div>
+    @endforeach
 </div>
 
-<hr>
+<button type="button"
+        class="btn btn-primary btn-sm"
+        id="add-item">
+    Add Bottom Item
+</button>
 
-<h5 class="mb-3">{{ __('Bottom Items') }}</h5>
+<script>
+(function () {
 
-<div class="repeater-wrapper"
-     data-bb-toggle="shortcode-repeater"
-     data-name="items"
-     data-value='@json(json_decode(Arr::get($attributes, "items", "[]"), true))'>
+    function initShortcode() {
 
-    <div class="repeater-template">
+        let listIndex = $('#list-wrapper .list-item').length;
+        let itemIndex = $('#items-wrapper .item-box').length;
 
-        <div class="form-group mb-3">
-            <label>{{ __('Icon') }}</label>
-            {!! Form::mediaImage('icon', null, ['data-name' => 'icon']) !!}
-        </div>
+        // Add Bullet List
+        $(document).off('click', '#add-list')
+            .on('click', '#add-list', function () {
 
-        <div class="form-group mb-3">
-            <label>{{ __('Title') }}</label>
-            <input type="text" data-name="title" class="form-control">
-        </div>
+                $('#list-wrapper').append(`
+                    <div class="list-item mb-2">
+                        <input type="text"
+                               name="list_item_${listIndex++}"
+                               class="form-control"
+                               placeholder="List item">
+                        <button type="button"
+                                class="btn btn-danger btn-sm remove-list">
+                            Remove
+                        </button>
+                    </div>
+                `);
+            });
 
-        <div class="form-group mb-3">
-            <label>{{ __('Description') }}</label>
-            <textarea data-name="description" rows="2" class="form-control"></textarea>
-        </div>
+        // Remove List
+        $(document).off('click', '.remove-list')
+            .on('click', '.remove-list', function () {
+                $(this).closest('.list-item').remove();
+            });
 
-    </div>
-</div>
+        // Add Bottom Item
+        $(document).off('click', '#add-item')
+            .on('click', '#add-item', function () {
+
+                let index = itemIndex++;
+
+                let mediaHtml = `{!! Form::mediaImage('item_icon___INDEX__', null) !!}`
+                    .replace(/___INDEX__/g, index);
+
+                let html = `
+                    <div class="item-box border p-3 mb-3">
+                        ${mediaHtml}
+                        <input type="text"
+                               name="item_title_${index}"
+                               class="form-control mt-2"
+                               placeholder="Item title">
+                        <textarea name="item_description_${index}"
+                                  class="form-control mt-2"
+                                  rows="2"
+                                  placeholder="Item description"></textarea>
+                        <button type="button"
+                                class="btn btn-danger btn-sm mt-2 remove-item">
+                            Remove
+                        </button>
+                    </div>
+                `;
+
+                $('#items-wrapper').append(html);
+
+                if (typeof Botble !== 'undefined') {
+                    Botble.initMediaIntegrate();
+                }
+            });
+
+        // Remove Item
+        $(document).off('click', '.remove-item')
+            .on('click', '.remove-item', function () {
+                $(this).closest('.item-box').remove();
+            });
+    }
+
+    $(document).on('shortcodeLoaded', initShortcode);
+    initShortcode();
+
+})();
+</script>
