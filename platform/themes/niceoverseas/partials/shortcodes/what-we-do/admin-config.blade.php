@@ -1,8 +1,22 @@
 @php
-    $featureTitles = (array) ($attributes['feature_title'] ?? []);
-    $featureIcons  = (array) ($attributes['feature_icon'] ?? []);
-    $listItems     = (array) ($attributes['list_item'] ?? []);
-    $featureIndex = count($featureTitles);
+    $features = [];
+
+    foreach ($attributes as $key => $value) {
+        if (str_starts_with($key, 'feature_title_')) {
+            $index = str_replace('feature_title_', '', $key);
+            $features[$index]['title'] = $value;
+            $features[$index]['icon'] = $attributes['feature_icon_' . $index] ?? '';
+        }
+    }
+
+    ksort($features);
+
+    $listItems = [];
+    foreach ($attributes as $key => $value) {
+        if (str_starts_with($key, 'list_item_')) {
+            $listItems[] = $value;
+        }
+    }
 @endphp
 
 <div class="form-group">
@@ -12,7 +26,7 @@
 </div>
 
 <div class="form-group">
-    <label>Main Title (HTML allowed)</label>
+    <label>Main Title</label>
     <textarea name="main_title" class="form-control"
               rows="3">{{ $attributes['main_title'] ?? '' }}</textarea>
 </div>
@@ -35,16 +49,14 @@
 <h4>Features</h4>
 
 <div id="features-wrapper">
-    @foreach($featureTitles as $index => $title)
+    @foreach($features as $index => $feature)
         <div class="feature-item border p-3 mb-3">
-            <div class="feature-icon-wrapper">
-                {!! Form::mediaImage("feature_icon[{$index}]", $featureIcons[$index] ?? null) !!}
-            </div>
+            {!! Form::mediaImage("feature_icon_$index", $feature['icon']) !!}
             <input type="text"
-                   name="feature_title[]"
+                   name="feature_title_{{ $index }}"
                    class="form-control mt-2"
-                   placeholder="Feature title"
-                   value="{{ $title }}">
+                   value="{{ $feature['title'] }}"
+                   placeholder="Feature title">
             <button type="button" class="btn btn-danger btn-sm mt-2 remove-feature">
                 Remove
             </button>
@@ -61,14 +73,14 @@
 <h4>Footer List Items</h4>
 
 <div id="lists-wrapper">
-    @foreach($listItems as $item)
+    @foreach($listItems as $index => $item)
         <div class="list-item mb-2">
             <input type="text"
-                   name="list_item[]"
-                   class="form-control d-inline-block w-75"
-                   placeholder="List item"
+                   name="list_item_{{ $index }}"
+                   class="form-control"
                    value="{{ $item }}">
-            <button type="button" class="btn btn-danger btn-sm remove-list">
+            <button type="button"
+                    class="btn btn-danger btn-sm remove-list">
                 Remove
             </button>
         </div>
@@ -95,90 +107,77 @@
 <script>
 (function () {
 
-    function initWhatWeDoShortcode() {
+    function initShortcode() {
 
-        let featureIndex = document.querySelectorAll('#features-wrapper .feature-item').length;
+        let featureIndex = $('#features-wrapper .feature-item').length;
+        let listIndex = $('#lists-wrapper .list-item').length;
 
-        // ADD FEATURE
-        $(document).off('click', '#add-feature').on('click', '#add-feature', function (e) {
-            e.preventDefault();
+        $(document).off('click', '#add-feature')
+            .on('click', '#add-feature', function () {
 
-            const index = featureIndex++;
-            const mediaHtml = `{!! Form::mediaImage('feature_icon[__INDEX__]', null) !!}`
-                .replace(/__INDEX__/g, index);
+                let index = featureIndex++;
 
-            const html = `
-                <div class="feature-item border p-3 mb-3">
-                    <div class="feature-icon-wrapper">
+                let mediaHtml = `{!! Form::mediaImage('feature_icon___INDEX__', null) !!}`
+                    .replace(/___INDEX__/g, index);
+
+                let html = `
+                    <div class="feature-item border p-3 mb-3">
                         ${mediaHtml}
+                        <input type="text"
+                               name="feature_title_${index}"
+                               class="form-control mt-2"
+                               placeholder="Feature title">
+                        <button type="button"
+                                class="btn btn-danger btn-sm mt-2 remove-feature">
+                            Remove
+                        </button>
                     </div>
+                `;
 
-                    <input type="text"
-                           name="feature_title[]"
-                           class="form-control mt-2"
-                           placeholder="Feature title">
+                $('#features-wrapper').append(html);
 
-                    <button type="button"
-                            class="btn btn-danger btn-sm mt-2 remove-feature">
-                        Remove
-                    </button>
-                </div>
-            `;
+                if (typeof Botble !== 'undefined') {
+                    Botble.initMediaIntegrate();
+                }
+            });
 
-            $('#features-wrapper').append(html);
+        $(document).off('click', '#add-list')
+            .on('click', '#add-list', function () {
 
-            // re-init media
-            if (typeof Botble !== 'undefined' && Botble.initMediaIntegrate) {
-                Botble.initMediaIntegrate();
-            }
-        });
+                let index = listIndex++;
 
+                $('#lists-wrapper').append(`
+                    <div class="list-item mb-2">
+                        <input type="text"
+                               name="list_item_${index}"
+                               class="form-control"
+                               placeholder="List item">
+                        <button type="button"
+                                class="btn btn-danger btn-sm remove-list">
+                            Remove
+                        </button>
+                    </div>
+                `);
+            });
 
-        // ADD LIST
-        $(document).off('click', '#add-list').on('click', '#add-list', function (e) {
-            e.preventDefault();
+        $(document).off('click', '.remove-feature')
+            .on('click', '.remove-feature', function () {
+                $(this).closest('.feature-item').remove();
+            });
 
-            const html = `
-                <div class="list-item mb-2">
-                    <input type="text"
-                           name="list_item[]"
-                           class="form-control d-inline-block w-75"
-                           placeholder="List item">
-
-                    <button type="button"
-                            class="btn btn-danger btn-sm remove-list">
-                        Remove
-                    </button>
-                </div>
-            `;
-
-            $('#lists-wrapper').append(html);
-        });
-
-
-        // REMOVE FEATURE
-        $(document).off('click', '.remove-feature').on('click', '.remove-feature', function () {
-            $(this).closest('.feature-item').remove();
-        });
-
-        // REMOVE LIST
-        $(document).off('click', '.remove-list').on('click', '.remove-list', function () {
-            $(this).closest('.list-item').remove();
-        });
-
+        $(document).off('click', '.remove-list')
+            .on('click', '.remove-list', function () {
+                $(this).closest('.list-item').remove();
+            });
     }
 
-    // IMPORTANT:
-    // Botble fires this when shortcode modal loads
-    $(document).on('shortcodeLoaded', function () {
-        initWhatWeDoShortcode();
-    });
-
-    // Also run once (fallback)
-    initWhatWeDoShortcode();
+    $(document).on('shortcodeLoaded', initShortcode);
+    initShortcode();
 
 })();
 </script>
+
+
 
 <style>
 .feature-icon-wrapper {
