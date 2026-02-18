@@ -1,76 +1,98 @@
 @php
-    $image = RvMedia::getImageUrl($shortcode->image);
-    $icon1 = RvMedia::getImageUrl($shortcode->icon1);
-    $icon2 = RvMedia::getImageUrl($shortcode->icon2);
-    $circleImage = RvMedia::getImageUrl($shortcode->circle_image);
+    $smallTitle   = $shortcode->small_title ?? '';
+    $mainTitle    = $shortcode->main_title ?? '';
+    $description  = $shortcode->description ?? '';
+    $image        = $shortcode->image ?? null;
+    $circleImage  = $shortcode->circle_image ?? null;
+    $contactUrl   = $shortcode->contact_url ?? '#';
+
+    $featureTitles = (array) ($shortcode->feature_title ?? []);
+    $featureIcons  = (array) ($shortcode->feature_icon ?? []);
+    $listItems     = (array) ($shortcode->list_item ?? []);
 @endphp
 
 <div class="what-we-do dark-section">
     <div class="container-fluid">
         <div class="row no-gutters">
 
+            {{-- LEFT IMAGE --}}
             <div class="col-lg-6">
                 <div class="what-we-do-image">
                     <figure class="image-anime">
-                        <img src="{{ $image }}" alt="">
+                        @if ($image)
+                            <img src="{{ RvMedia::getImageUrl($image) }}" alt="{{ $smallTitle }}">
+                        @endif
                     </figure>
                 </div>
             </div>
 
+            {{-- RIGHT CONTENT --}}
             <div class="col-lg-6">
                 <div class="what-we-do-content">
 
+                    {{-- SECTION TITLE --}}
                     <div class="section-title">
-                        <h3 class="wow fadeInUp">
-                            {{ $shortcode->small_title }}
-                        </h3>
+                        @if ($smallTitle)
+                            <h3 class="wow fadeInUp">
+                                {{ $smallTitle }}
+                            </h3>
+                        @endif
 
-                        <h2 class="text-anime-style-2" data-cursor="-opaque">
-                            {!! $shortcode->main_title !!}
-                        </h2>
+                        @if ($mainTitle)
+                            <h2 class="text-anime-style-2" data-cursor="-opaque">
+                                {!! BaseHelper::clean($mainTitle) !!}
+                            </h2>
+                        @endif
 
-                        <p class="wow fadeInUp" data-wow-delay="0.2s">
-                            {{ $shortcode->description }}
-                        </p>
+                        @if ($description)
+                            <p class="wow fadeInUp" data-wow-delay="0.2s">
+                                {{ $description }}
+                            </p>
+                        @endif
                     </div>
 
-                    <div class="what-do-body-list wow fadeInUp" data-wow-delay="0.4s">
+                    {{-- FEATURES --}}
+                    @if (!empty($featureTitles))
+                        <div class="what-do-body-list wow fadeInUp" data-wow-delay="0.4s">
+                            @foreach ($featureTitles as $index => $title)
+                                <div class="what-do-body-item">
+                                    @if (!empty($featureIcons[$index]))
+                                        <div class="icon-box">
+                                            <img src="{{ RvMedia::getImageUrl($featureIcons[$index]) }}"
+                                                 alt="{{ $title }}">
+                                        </div>
+                                    @endif
 
-                        <div class="what-do-body-item">
-                            <div class="icon-box">
-                                <img src="{{ $icon1 }}" alt="">
-                            </div>
-                            <div class="what-do-body-content">
-                                <h3>{{ $shortcode->feature_title1 }}</h3>
-                            </div>
+                                    <div class="what-do-body-content">
+                                        <h3>{{ $title }}</h3>
+                                    </div>
+                                </div>
+                            @endforeach
                         </div>
+                    @endif
 
-                        <div class="what-do-body-item">
-                            <div class="icon-box">
-                                <img src="{{ $icon2 }}" alt="">
-                            </div>
-                            <div class="what-do-body-content">
-                                <h3>{{ $shortcode->feature_title2 }}</h3>
-                            </div>
-                        </div>
-
-                    </div>
-
+                    {{-- FOOTER --}}
                     <div class="what-we-do-footer">
 
-                        <div class="what-we-do-list wow fadeInUp" data-wow-delay="0.6s">
-                            <ul>
-                                <li>{{ $shortcode->list_item1 }}</li>
-                                <li>{{ $shortcode->list_item2 }}</li>
-                                <li>{{ $shortcode->list_item3 }}</li>
-                            </ul>
-                        </div>
+                        {{-- LIST ITEMS --}}
+                        @if (!empty($listItems))
+                            <div class="what-we-do-list wow fadeInUp" data-wow-delay="0.6s">
+                                <ul>
+                                    @foreach ($listItems as $item)
+                                        <li>{{ $item }}</li>
+                                    @endforeach
+                                </ul>
+                            </div>
+                        @endif
 
-                        <div class="what-we-do-circle">
-                            <a href="{{ $shortcode->contact_url }}">
-                                <img src="{{ $circleImage }}" alt="">
-                            </a>
-                        </div>
+                        {{-- CIRCLE IMAGE --}}
+                        @if ($circleImage)
+                            <div class="what-we-do-circle">
+                                <a href="{{ $contactUrl }}">
+                                    <img src="{{ RvMedia::getImageUrl($circleImage) }}" alt="Contact">
+                                </a>
+                            </div>
+                        @endif
 
                     </div>
 

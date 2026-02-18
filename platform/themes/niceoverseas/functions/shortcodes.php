@@ -116,41 +116,29 @@ app()->booted(function () {
     });
 
 
-    //Why choose us
-    Shortcode::register('why_choose_us', __('Why Choose Us'), __('Why Choose Us Section'), function ($shortcode) {
-
-        $features = json_decode($shortcode->features ?? '[]', true);
-        $items = json_decode($shortcode->items ?? '[]', true);
-
-        return Theme::partial(
-            'shortcodes.why-choose-us.why-choose-us',
-            compact('shortcode', 'features', 'items')
-        );
-    });
-
-
-    Shortcode::setAdminConfig('why_choose_us', function (array $attributes) {
-        return Theme::partial(
-            'shortcodes.why-choose-us.admin-config',
-            compact('attributes')
-        );
-    });
-
 
     // what we do
-
     Shortcode::register(
         'what-we-do',
-        __('What We Do Section'),
-        __('What We Do section with image, features and list'),
-        function ($shortcode) {
+        __('What We Do Section'),  // This is the name
+        __('What We Do section with image, features and list'),  // This is the description
+        function (ShortcodeCompiler $shortcode) {
             return Theme::partial('shortcodes.what-we-do.what-we-do', compact('shortcode'));
         }
     );
 
     Shortcode::setAdminConfig('what-we-do', function ($attributes) {
-        return Theme::partial('shortcodes.what-we-do.admin-config', compact('attributes'));
+
+        return Theme::partial(
+            'shortcodes.what-we-do.admin-config',
+            compact('attributes')
+        );
     });
+
+
+
+
+
     ////////////////////////////////////////////////////////
 
     //intro block

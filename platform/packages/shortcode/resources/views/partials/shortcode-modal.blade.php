@@ -6,7 +6,7 @@
     window.BB_SHORTCODES = {!!
         Js::from(
             collect($shortcodes)->mapWithKeys(
-            fn( $shortcode, $key) => [$key => ($shortcode['name'] ?: $shortcode['description']) ?: $key]
+            fn( $shortcode, $key) => [$key => ($shortcode['name'] ?? $shortcode['description']) ?: $key]
             )->toArray()
         )
     !!}
